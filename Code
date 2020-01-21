@@ -1,0 +1,143 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct LNode
+{
+	int data;
+	struct LNode *next;
+} LNode, *LinkList;
+
+void Create_List_head(LinkList *L)
+{
+	//头插法创建链表
+	int i, j,one;
+	//定义一个结构体类型的指针变量
+	LinkList p;
+	
+	printf("请输入要创建元素的个数：");
+	scanf("%d", &j);
+	//LNode在引入参数时就进行了定义，此时分配LNode个存储空间
+	*L = (LinkList)malloc(sizeof(LNode));
+	(*L)->next = NULL;//定义为空表
+	
+	printf("\n请按1开始创建链表：");
+	scanf("%d", &one);
+	
+	//头插法创建链表
+	for (i = 0; i < j; i++) {
+		p = (LinkList)malloc(sizeof(LNode));
+		p->data = rand() % 100;
+		printf("%d ", p->data);
+		p->next = (*L)->next;
+		(*L)->next = p;
+	}
+	printf("\n");
+}
+
+void Find_List_mid_element(LinkList l)
+{
+	int m = 0;
+	//采用快慢指针
+	LinkList n;
+	LinkList q;
+	//n = (LinkList)malloc(sizeof(LNode));
+	n = l;
+	q = l;
+	while (n) {
+			if (n->next->next) {
+				m++;
+				n = n->next->next;
+				q = q->next;
+				if (n->next == NULL) {
+					printf("\n中间元素是第%d个和第%d个元素，分别为%d和%d\n", m, m+1,q->data,q->next->data);
+					break;
+				}
+			}
+			else {
+				m++;
+				printf("\n中间元素是第%d个元素,为%d\n", m,q->next->data);
+				break;
+			}
+	}
+}
+
+void Through_List(LinkList T) {
+	int i = 0;
+	printf("\n遍历链表如下：\n");
+	while (T->next) {
+		printf("%d ", T->next->data);
+		T = T->next;
+	}
+	printf("\n");
+}
+
+void Insert_element(LinkList I, int seq_num, int random) {
+	LinkList p;
+	int i;
+	if (seq_num < 1 || I->next == NULL) {
+		printf("input is wrong");
+		return;
+	}
+	for (i = 0; i < seq_num-1; i++) {
+		I=I->next;
+		if (I->next == NULL && i < seq_num - 2) {
+			printf("input is beyond the list range");
+			return;
+		}
+	}
+	p = (LinkList)malloc(sizeof(LNode));
+	p->data = random;
+	p->next = I->next;
+	I->next = p;
+}
+
+void Delete_element(LinkList D, int seq_num2) {
+	int i;
+	LinkList p;
+	if (seq_num2 < 1 || D->next == NULL) {
+		printf("input is wrong");
+		return;
+	}
+	for (i = 0; i < seq_num2 - 1; i++) {
+		D = D->next;
+		if (D->next == NULL) {
+			printf("input is beyond the list range");
+			return;
+		}
+	}
+		p = D->next;
+		D->next = D->next->next;
+		free(p);
+}
+	
+int main()
+{
+	//LinkList h = (LinkList)malloc(sizeof(LNode));//得到头节点
+	//h->next = NULL;//表示链表为空
+	LinkList h;
+	int seq_num,seq_num2,random;
+	random = rand() % 100;
+	
+	//创建链表
+	Create_List_head(&h);
+	//遍历链表
+	Through_List(h);
+	//找链表中间位置，并输出出对应的值
+	Find_List_mid_element(h);
+	Through_List(h);
+	//插入元素
+	printf("\n请输入要插入元素的位置：");
+	scanf("%d", &seq_num);
+	printf("\n在第%d个位置插入元素%d", seq_num,random);
+	Insert_element(h,seq_num,random);
+	Through_List(h);
+	//删除元素
+	printf("\n请输入要删除元素的位置：");
+	scanf("%d", &seq_num2);
+	Delete_element(h,seq_num2);
+	Through_List(h);
+	//结束
+	getchar();
+	return 0;
+}
